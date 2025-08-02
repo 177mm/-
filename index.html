@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desbloquea el Collage Secreto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            transition: all 0.5s ease;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .instructions {
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .color-sequence {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .color-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+
+        .color-box.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #password-display {
+            margin-top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2e7d32;
+            letter-spacing: 8px;
+        }
+
+        #result-message {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #d32f2f;
+            height: 25px;
+        }
+
+        #start-btn, #next-btn {
+            padding: 12px 25px;
+            background: linear-gradient(to right, #2e7d32, #388e3c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        #start-btn:hover, #next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(46, 125, 50, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="game-container">
+        <h1>???</h1>
+        <p class="instructions">Memoriza la secuencia de colores para revelar la contraseña.</p>
+        
+        <div class="color-sequence" id="color-sequence">
+            <div class="color-box" style="background: #FF5733;"></div>
+            <div class="color-box" style="background: #33FF57;"></div>
+            <div class="color-box" style="background: #3357FF;"></div>
+            <div class="color-box" style="background: #F333FF;"></div>
+            <div class="color-box" style="background: #FF33F3;"></div>
+            <div class="color-box" style="background: #33FFF5;"></div>
+        </div>
+
+        <button id="start-btn">Iniciar</button>
+        <div id="password-display" class="hidden">_ _ _ _ _ _</div>
+        <div id="result-message"></div>
+        <button id="next-btn" class="hidden">Siguiente</button>
+    </div>
+
+    <script>
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#F333FF", "#FF33F3", "#33FFF5"];
+        const password = "190507";
+        let sequence = [];
+        let userSequence = [];
+
+        const startBtn = document.getElementById("start-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const colorBoxes = document.querySelectorAll(".color-box");
+        const passwordDisplay = document.getElementById("password-display");
+        const resultMessage = document.getElementById("result-message");
+
+        // Generar secuencia aleatoria (índices: 0-5)
+        function generateSequence() {
+            sequence = [];
+            for (let i = 0; i < password.length; i++) {
+                sequence.push(Math.floor(Math.random() * 6));
+            }
+        }
+
+        // Mostrar secuencia al usuario
+        function playSequence() {
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i >= sequence.length) {
+                    clearInterval(interval);
+                    return;
+                }
+                const box = colorBoxes[sequence[i]];
+                box.classList.add("active");
+                setTimeout(() => {
+                    box.classList.remove("active");
+                }, 500);
+                i++;
+            }, 800);
+        }
+
+        // Iniciar juego
+        startBtn.addEventListener("click", () => {
+            generateSequence();
+            playSequence();
+            setTimeout(() => {
+                startBtn.classList.add("hidden");
+                passwordDisplay.classList.remove("hidden");
+                colorBoxes.forEach(box => box.style.cursor = "pointer");
+            }, sequence.length * 800 + 500);
+        });
+
+        // Manejar clics del usuario
+        colorBoxes.forEach((box, index) => {
+            box.addEventListener("click", () => {
+                if (startBtn.classList.contains("hidden")) {
+                    box.classList.add("active");
+                    setTimeout(() => box.classList.remove("active"), 200);
+                    userSequence.push(index);
+                    
+                    // Verificar si la secuencia es correcta
+                    const isCorrect = userSequence.every((val, i) => val === sequence[i]);
+                    
+                    if (!isCorrect) {
+                        resultMessage.textContent = "❌ Secuencia incorrecta. Intenta de nuevo.";
+                        setTimeout(() => {
+                            userSequence = [];
+                            passwordDisplay.textContent = "_ _ _ _ _ _";
+                            resultMessage.textContent = "";
+                            playSequence();
+                        }, 1500);
+                        return;
+                    }
+
+                    // Si la secuencia es correcta, revelar un dígito
+                    if (userSequence.length <= password.length) {
+                        let revealedPassword = "";
+                        for (let i = 0; i < userSequence.length; i++) {
+                            revealedPassword += password[i] + " ";
+                        }
+                        for (let i = userSequence.length; i < password.length; i++) {
+                            revealedPassword += "_ ";
+                        }
+                        passwordDisplay.textContent = revealedPassword.trim();
+                    }
+
+                    // Si completó toda la secuencia correctamente
+                    if (userSequence.length === sequence.length) {
+                        resultMessage.textContent = "✅ ¡Correcto! Redirigiendo...";
+                        resultMessage.style.color = "#2e7d32";
+                        setTimeout(() => {
+                            window.location.href = "collage.html"; // Redirige al otro HTML
+                        }, 1500);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

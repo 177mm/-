@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collage Especial</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
+        
+        /* Estilos para el login */
+        .login-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+        
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+        
+        .login-box:hover {
+            transform: scale(1.02);
+        }
+        
+        .login-box h1 {
+            color: #4a5568;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+        
+        .login-box input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .login-box input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        #message {
+            height: 20px;
+            margin: 15px 0;
+            color: #e53e3e;
+            font-size: 14px;
+        }
+        
+        /* Estilos para el collage (inicialmente oculto) */
+        .collage-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .main-collage-image {
+            width: 90%;
+            max-width: 900px;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: fadeInScale 1.5s ease-out;
+        }
+        
+        @keyframes fadeInScale {
+            from { 
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Clase para mostrar el collage */
+        .show-collage .login-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .show-collage .collage-container {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor del login -->
+    <div class="login-container">
+        <div class="login-box">
+            <h1>(●'◡'●)</h1>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Usuario" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <div id="message"></div>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Contenedor del collage (inicialmente oculto) -->
+    <div class="collage-container">
+        <!-- Imagen principal del collage -->
+        <img src="Karime.png" alt="Collage de recuerdos" class="main-collage-image">
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('message');
+            
+            if(username === 'Karime' && password === '190507') {
+                // Mostrar el collage y ocultar el login
+                document.body.classList.add('show-collage');
+                
+                // Cambiar el fondo después del login
+                document.body.style.background = "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)";
+            } else {
+                message.textContent = "Credenciales incorrectas. Usuario: Karime, Contraseña: 190507";
+                setTimeout(() => {
+                    message.textContent = "";
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
