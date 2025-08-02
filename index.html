@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desbloquea el Collage Secreto</title>
+    <title>???</title>
     <style>
         * {
             margin: 0;
@@ -89,6 +89,15 @@
             height: 25px;
         }
 
+        #credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px dashed #2e7d32;
+            display: none;
+        }
+
         #start-btn, #next-btn {
             padding: 12px 25px;
             background: linear-gradient(to right, #2e7d32, #388e3c);
@@ -110,7 +119,7 @@
 <body>
     <div class="game-container" id="game-container">
         <h1>???</h1>
-        <p class="instructions">Memoriza la secuencia de colores para revelar la contraseña.</p>
+        <p class="instructions">Memoriza la secuencia de colores para revelar las credenciales😶‍🌫️.</p>
         
         <div class="color-sequence" id="color-sequence">
             <div class="color-box" style="background: #FF5733;"></div>
@@ -124,7 +133,14 @@
         <button id="start-btn">Iniciar</button>
         <div id="password-display" class="hidden">_ _ _ _ _ _</div>
         <div id="result-message"></div>
-        <button id="next-btn" class="hidden">Siguiente</button>
+        
+        <!-- Nuevo: Muestra usuario y contraseña al ganar -->
+        <div id="credentials" class="hidden">
+            <p><strong>Usuario:</strong> Karime</p>
+            <p><strong>Contraseña:</strong> 190507</p>
+        </div>
+        
+        <button id="next-btn" class="hidden">Continuar</button>
     </div>
 
     <script>
@@ -138,6 +154,7 @@
         const colorBoxes = document.querySelectorAll(".color-box");
         const passwordDisplay = document.getElementById("password-display");
         const resultMessage = document.getElementById("result-message");
+        const credentials = document.getElementById("credentials");
 
         // Generar secuencia aleatoria (índices: 0-5)
         function generateSequence() {
@@ -192,7 +209,6 @@
                             userSequence = [];
                             passwordDisplay.textContent = "_ _ _ _ _ _";
                             resultMessage.textContent = "";
-                            playSequence();
                         }, 1500);
                         return;
                     }
@@ -211,14 +227,18 @@
 
                     // Si completó toda la secuencia correctamente
                     if (userSequence.length === sequence.length) {
-                        resultMessage.textContent = "✅ ¡Correcto! Redirigiendo...";
+                        resultMessage.textContent = "✅ ¡Secuencia correcta!";
                         resultMessage.style.color = "#2e7d32";
-                        setTimeout(() => {
-                            window.location.href = "collage.html"; // Redirige al otro HTML
-                        }, 1500);
+                        credentials.style.display = "block"; // Muestra usuario y contraseña
+                        nextBtn.classList.remove("hidden");
                     }
                 }
             });
+        });
+
+        // Redirigir al collage
+        nextBtn.addEventListener("click", () => {
+            window.location.href = "collage.html"; 
         });
     </script>
 </body>
